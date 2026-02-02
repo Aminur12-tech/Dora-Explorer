@@ -1,0 +1,287 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+/* GHY-Go Design System - Culturally Rooted Guwahati Travel Experience */
+
+@layer base {
+  :root {
+    /* Core Brand Colors - Brahmaputra Inspired */
+    --background: 210 25% 97%;
+    --foreground: 215 30% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 215 30% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 30% 15%;
+
+    /* Deep River Blue - Primary */
+    --primary: 210 52% 24%;
+    --primary-foreground: 45 80% 96%;
+
+    /* Warm Eri Silk Gold - Secondary */
+    --secondary: 42 65% 56%;
+    --secondary-foreground: 215 30% 15%;
+
+    /* Muted Silk Tones */
+    --muted: 210 20% 94%;
+    --muted-foreground: 215 15% 45%;
+
+    /* Accent - Lighter Gold */
+    --accent: 42 75% 60%;
+    --accent-foreground: 215 30% 15%;
+
+    /* Destructive / SOS */
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* UI Elements */
+    --border: 210 20% 88%;
+    --input: 210 20% 92%;
+    --ring: 210 52% 24%;
+
+    --radius: 0.75rem;
+
+    /* Custom Brand Tokens */
+    --river-blue: 210 52% 24%;
+    --river-blue-light: 210 45% 35%;
+    --river-blue-dark: 210 55% 18%;
+    
+    --silk-gold: 42 65% 56%;
+    --silk-gold-light: 42 70% 70%;
+    --silk-gold-dark: 42 60% 45%;
+    
+    --charcoal: 215 20% 25%;
+    --charcoal-light: 215 15% 40%;
+    
+    --success: 152 60% 40%;
+    --success-foreground: 0 0% 100%;
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(210 52% 24%) 0%, hsl(210 45% 35%) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(42 65% 56%) 0%, hsl(42 70% 70%) 100%);
+    --gradient-sunset: linear-gradient(180deg, hsl(25 80% 55%) 0%, hsl(340 70% 50%) 50%, hsl(210 52% 24%) 100%);
+    
+    /* Shadows */
+    --shadow-card: 0 4px 20px -4px hsl(210 52% 24% / 0.12);
+    --shadow-card-hover: 0 12px 32px -8px hsl(210 52% 24% / 0.2);
+    --shadow-button: 0 4px 14px -3px hsl(42 65% 56% / 0.4);
+
+    /* Sidebar */
+    --sidebar-background: 210 25% 97%;
+    --sidebar-foreground: 215 30% 15%;
+    --sidebar-primary: 210 52% 24%;
+    --sidebar-primary-foreground: 45 80% 96%;
+    --sidebar-accent: 42 65% 56%;
+    --sidebar-accent-foreground: 215 30% 15%;
+    --sidebar-border: 210 20% 88%;
+    --sidebar-ring: 210 52% 24%;
+  }
+
+  .dark {
+    --background: 215 30% 10%;
+    --foreground: 210 25% 95%;
+
+    --card: 215 25% 14%;
+    --card-foreground: 210 25% 95%;
+
+    --popover: 215 25% 14%;
+    --popover-foreground: 210 25% 95%;
+
+    --primary: 42 65% 56%;
+    --primary-foreground: 215 30% 10%;
+
+    --secondary: 210 52% 24%;
+    --secondary-foreground: 210 25% 95%;
+
+    --muted: 215 20% 20%;
+    --muted-foreground: 210 15% 60%;
+
+    --accent: 42 75% 60%;
+    --accent-foreground: 215 30% 10%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 215 20% 22%;
+    --input: 215 20% 22%;
+    --ring: 42 65% 56%;
+
+    --sidebar-background: 215 25% 12%;
+    --sidebar-foreground: 210 25% 95%;
+    --sidebar-primary: 42 65% 56%;
+    --sidebar-primary-foreground: 215 30% 10%;
+    --sidebar-accent: 210 52% 24%;
+    --sidebar-accent-foreground: 210 25% 95%;
+    --sidebar-border: 215 20% 22%;
+    --sidebar-ring: 42 65% 56%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  /* Hero Button Variant */
+  .btn-hero {
+    @apply bg-secondary text-secondary-foreground font-semibold px-6 py-3 rounded-full;
+    @apply shadow-[var(--shadow-button)] transition-all duration-300;
+    @apply hover:scale-105 hover:shadow-lg active:scale-95;
+  }
+
+  /* Experience Card Styles */
+  .experience-card {
+    @apply bg-card rounded-2xl overflow-hidden;
+    box-shadow: var(--shadow-card);
+    @apply transition-all duration-300;
+  }
+  
+  .experience-card:hover {
+    box-shadow: var(--shadow-card-hover);
+    @apply -translate-y-1;
+  }
+
+  /* Filter Chip */
+  .filter-chip {
+    @apply px-4 py-2 rounded-full text-sm font-medium transition-all duration-200;
+    @apply bg-muted text-muted-foreground border border-transparent;
+    @apply hover:bg-primary hover:text-primary-foreground;
+    @apply whitespace-nowrap flex-shrink-0;
+  }
+  
+  .filter-chip.active {
+    @apply bg-primary text-primary-foreground;
+  }
+
+  /* Time Slot Button */
+  .time-slot {
+    @apply px-4 py-3 rounded-xl border-2 border-border text-center font-medium;
+    @apply transition-all duration-200 cursor-pointer;
+    @apply hover:border-primary hover:bg-primary/5;
+  }
+  
+  .time-slot.selected {
+    @apply border-primary bg-primary text-primary-foreground;
+  }
+
+  /* Verified Badge */
+  .verified-badge {
+    @apply inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium;
+    @apply bg-success/10 text-success;
+  }
+
+  /* Floating Action Button */
+  .fab {
+    @apply fixed bottom-20 right-4 w-14 h-14 rounded-full;
+    @apply bg-primary text-primary-foreground shadow-lg;
+    @apply flex items-center justify-center z-50;
+    @apply transition-all duration-300 hover:scale-110;
+  }
+
+  /* Bottom Navigation */
+  .bottom-nav {
+    @apply fixed bottom-0 left-0 right-0 bg-card border-t border-border;
+    @apply flex justify-around items-center py-2 px-4 z-40;
+    @apply safe-area-inset-bottom;
+  }
+  
+  .nav-item {
+    @apply flex flex-col items-center gap-1 py-2 px-4 rounded-xl;
+    @apply text-muted-foreground transition-all duration-200;
+    @apply hover:text-primary;
+  }
+  
+  .nav-item.active {
+    @apply text-primary bg-primary/10;
+  }
+
+  /* Stepper */
+  .stepper-step {
+    @apply w-10 h-10 rounded-full flex items-center justify-center font-semibold;
+    @apply transition-all duration-300;
+  }
+  
+  .stepper-step.completed {
+    @apply bg-success text-success-foreground;
+  }
+  
+  .stepper-step.active {
+    @apply bg-primary text-primary-foreground ring-4 ring-primary/20;
+  }
+  
+  .stepper-step.pending {
+    @apply bg-muted text-muted-foreground;
+  }
+
+  /* Language Card */
+  .language-card {
+    @apply bg-card rounded-xl p-4 border border-border;
+    @apply transition-all duration-200 hover:border-secondary;
+  }
+
+  /* SOS Button */
+  .sos-button {
+    @apply bg-destructive text-destructive-foreground font-bold px-8 py-4 rounded-full;
+    @apply shadow-lg animate-pulse hover:animate-none hover:scale-105;
+    @apply transition-transform duration-200;
+  }
+
+  /* Star Rating */
+  .star {
+    @apply w-8 h-8 cursor-pointer transition-all duration-150;
+    @apply hover:scale-110;
+  }
+  
+  .star.filled {
+    @apply text-secondary;
+  }
+  
+  .star.empty {
+    @apply text-muted;
+  }
+}
+
+@layer utilities {
+  .safe-area-inset-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+  
+  .text-gradient-hero {
+    background: var(--gradient-hero);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .bg-gradient-hero {
+    background: var(--gradient-hero);
+  }
+  
+  .bg-gradient-gold {
+    background: var(--gradient-gold);
+  }
+  
+  .bg-gradient-sunset {
+    background: var(--gradient-sunset);
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
