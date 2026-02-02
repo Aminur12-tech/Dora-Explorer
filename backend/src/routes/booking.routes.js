@@ -152,5 +152,69 @@ router.put('/:id/cancel', async (req, res) => {
   }
 }); 
 
+// Request a booking (user initiates)
+router.post('/request', async (req, res) => {
+  try {
+    const { experienceId, userId, name, email, phone, amount, participants, notes } = req.body;
+    const experience = await Experience.findById(experienceId);
+    if (!experience) return res.status(404).json({ message: 'Experience not found' });
+
+    const booking = new Booking({
+      experienceId,
+      userId,
+      merchantId: experience.merchantId,
+      name,
+      email,
+      phone,
+      amount: amount || experience.price,
+      currency: 'INR',
+      status: 'requested',
+      participants,
+      notes,
+      requestedAt: new Date()
+    });
+
+    await booking.save();
+    res.status(201).json({
+      message: 'Booking requested successfully',
+      bookingId: booking._id,
+      status: 'requested',
+      experience: {
+        title: experience.title,
+        area: experience.area
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Merchant confirms booking
+router.put('/:id/confirm', async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.params.id);
+    if (!booking) return res.status(404).json({ message: 'Booking not found' });
+
+    if (booking.status !== 'requested') {
+      return res.status(400).json({ message: 'Only requested bookings can be confirmed' });
+    }
+
+    booking.status = 'confirmed';
+    booking.confirmedAt = new Date();
+    await booking.save();
+
+    res.json({
+      message: 'Booking confirmed by merchant',
+      bookingId: booking._id,
+      status: 'confirmed',
+      confirmedAt: booking.confirmedAt,
+      nextStep: 'User will proceed to payment'
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
 
 module.exports = router;
