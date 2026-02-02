@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  ArrowLeft, Clock, Star, MapPin, Check, 
-  Share2, Heart, BadgeCheck, Users, Loader2 
+import {
+  ArrowLeft, Clock, Star, MapPin, Check,
+  Share2, Heart, BadgeCheck, Users, Loader2
 } from 'lucide-react';
 import { experiences } from '@/data/experiences';
 import { TimeSlotPicker } from '@/components/TimeSlotPicker';
 import { Button } from '@/components/ui/button';
+import { MapComponent } from '@/components/Map';
 
 const ExperienceDetail = () => {
   const { id } = useParams();
@@ -35,7 +36,7 @@ const ExperienceDetail = () => {
 
   const handleBookNow = async () => {
     if (!selectedSlot) return;
-    
+
     setIsBooking(true);
     // Simulate booking API call
     await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -176,10 +177,20 @@ const ExperienceDetail = () => {
               </p>
             </div>
           </div>
-          
+
           {/* Map Placeholder */}
-          <div className="mt-4 h-32 bg-muted rounded-xl flex items-center justify-center">
-            <p className="text-muted-foreground text-sm">Map preview</p>
+          {/* Map Preview */}
+          <div className="mt-4 h-56 rounded-xl overflow-hidden relative z-0">
+            <MapComponent
+              center={[experience.latitude, experience.longitude]}
+              zoom={15}
+              markers={[
+                {
+                  position: [experience.latitude, experience.longitude],
+                  title: experience.meetingPoint
+                }
+              ]}
+            />
           </div>
         </div>
 
@@ -211,7 +222,7 @@ const ExperienceDetail = () => {
               <span>{experience.spotsLeft} spots left</span>
             </div>
           </div>
-          
+
           <Button
             onClick={handleBookNow}
             disabled={!selectedSlot || isBooking}

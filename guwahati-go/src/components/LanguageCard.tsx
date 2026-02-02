@@ -6,10 +6,19 @@ interface LanguageCardProps {
   english: string;
   assamese: string;
   phonetic: string;
+  audio?: string;
 }
 
-export const LanguageCard = ({ english, assamese, phonetic }: LanguageCardProps) => {
+export const LanguageCard = ({ english, assamese, phonetic, audio }: LanguageCardProps) => {
   const [showFullScreen, setShowFullScreen] = useState(false);
+
+  const playAudio = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (audio) {
+      const audioObj = new Audio(audio);
+      audioObj.play().catch(err => console.error("Error playing audio:", err));
+    }
+  };
 
   return (
     <>
@@ -23,10 +32,14 @@ export const LanguageCard = ({ english, assamese, phonetic }: LanguageCardProps)
             <p className="text-lg font-semibold text-foreground">{english}</p>
           </div>
           <div className="flex gap-2">
-            <button className="p-2 rounded-full bg-muted hover:bg-primary/10 transition-colors">
-              <Volume2 className="w-4 h-4 text-primary" />
+            <button
+              onClick={playAudio}
+              disabled={!audio}
+              className={`p-2 rounded-full transition-colors ${audio ? 'bg-muted hover:bg-primary/10 cursor-pointer' : 'bg-muted/50 cursor-not-allowed opacity-50'}`}
+            >
+              <Volume2 className={`w-4 h-4 ${audio ? 'text-primary' : 'text-muted-foreground'}`} />
             </button>
-            <button 
+            <button
               onClick={() => setShowFullScreen(true)}
               className="p-2 rounded-full bg-muted hover:bg-secondary/20 transition-colors"
             >
@@ -34,7 +47,7 @@ export const LanguageCard = ({ english, assamese, phonetic }: LanguageCardProps)
             </button>
           </div>
         </div>
-        
+
         <div className="border-t border-border pt-3 mt-3">
           <p className="text-sm text-muted-foreground mb-1">Assamese</p>
           <p className="text-xl font-medium text-primary mb-1">{phonetic}</p>

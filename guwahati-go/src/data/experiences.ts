@@ -29,6 +29,8 @@ export interface Experience {
   meetingPoint: string;
   highlights: string[];
   timeSlots: string[];
+  latitude: number;
+  longitude: number;
 }
 
 export const experiences: Experience[] = [
@@ -49,11 +51,13 @@ export const experiences: Experience[] = [
     spotsLeft: 4,
     meetingPoint: 'Umananda Ghat, near the ferry terminal',
     highlights: ['Golden hour photography', 'Local legends & stories', 'Complimentary chai', 'Small group (max 6)'],
-    timeSlots: ['4:00 PM', '4:30 PM', '5:00 PM']
+    timeSlots: ['4:00 PM', '4:30 PM', '5:00 PM'],
+    latitude: 26.185743,
+    longitude: 91.739256
   },
   {
-    id: 'fancy bazar',
-    title: 'Panbazar Tea Tasting',
+    id: 'Panbazar',
+    title: 'Panbazar',
     description: 'Dive into Assam\'s famous tea culture at historic fancy bazar and panbazar. Visit traditional tea stalls, learn the art of brewing the perfect Assamese chai, and taste rare single-estate teas. Includes visits to century-old shops and local snacks.',
     shortDescription: 'Authentic Assamese tea experience',
     image: teaTasting,
@@ -68,7 +72,9 @@ export const experiences: Experience[] = [
     spotsLeft: 2,
     meetingPoint: 'Panbazar Main Road, near Fancy Bazar crossing',
     highlights: ['5 tea varieties', 'Brewing masterclass', 'Local snacks included', 'Tea to take home'],
-    timeSlots: ['9:00 AM', '10:00 AM', '3:00 PM', '4:00 PM']
+    timeSlots: ['9:00 AM', '10:00 AM', '3:00 PM', '4:00 PM'],
+    latitude: 26.185915,
+    longitude: 91.745307
   },
   {
     id: 'sualkuchi-silk',
@@ -77,7 +83,7 @@ export const experiences: Experience[] = [
     shortDescription: 'Traditional silk weaving experience',
     image: silkWeaving,
     duration: 240,
-    price: 1450,
+    price: 1250,
     rating: 5.0,
     reviewCount: 56,
     hostName: 'Rupjyoti Das',
@@ -87,7 +93,9 @@ export const experiences: Experience[] = [
     spotsLeft: 3,
     meetingPoint: 'Sualkuchi Bus Stand (transport from GHY included)',
     highlights: ['Live weaving demo', 'Try the loom yourself', 'Learn silk history', 'Shop authentic silk'],
-    timeSlots: ['8:00 AM', '1:00 PM']
+    timeSlots: ['8:00 AM', '1:00 PM'],
+    latitude: 26.1706,
+    longitude: 91.5694
   },
   {
     id: 'kamakhya-darshan',
@@ -106,7 +114,9 @@ export const experiences: Experience[] = [
     spotsLeft: 6,
     meetingPoint: 'Kamakhya Temple Lower Parking',
     highlights: ['Priority entry tips', 'Temple history', 'Photo spots guide', 'Prasad included'],
-    timeSlots: ['6:00 AM', '7:00 AM', '2:00 PM', '3:00 PM']
+    timeSlots: ['6:00 AM', '7:00 AM', '2:00 PM', '3:00 PM'],
+    latitude: 26.162773,
+    longitude: 91.712609
   },
   {
     id: 'fancy-bazar-spice',
@@ -125,7 +135,9 @@ export const experiences: Experience[] = [
     spotsLeft: 5,
     meetingPoint: 'Fancy Bazar Main Gate, opposite SBI',
     highlights: ['15+ tastings', 'Spice shopping guide', 'Hidden food gems', 'Assamese thali lunch'],
-    timeSlots: ['9:00 AM', '10:00 AM']
+    timeSlots: ['9:00 AM', '10:00 AM'],
+    latitude: 26.182776,
+    longitude: 91.738862
   },
   {
     id: 'tribal-art',
@@ -144,13 +156,18 @@ export const experiences: Experience[] = [
     spotsLeft: 4,
     meetingPoint: 'Tribal Art Centre, near Zoo Road',
     highlights: ['Natural dye making', 'Take your art home', 'Tribal history stories', 'Refreshments included'],
-    timeSlots: ['10:00 AM', '2:00 PM', '4:00 PM']
+    timeSlots: ['10:00 AM', '2:00 PM', '4:00 PM'],
+    latitude: 26.1649,
+    longitude: 91.7820
   }
 ];
 
+import nomoskarAudio from '@/assets/Nomoskar.m4a.mp4';
+import dhonyobadAudio from '@/assets/Dhonyobad.m4a.mp4';
+
 export const languagePhrases = [
-  { english: 'Hello', assamese: 'নমস্কাৰ', phonetic: 'Nomoskar' },
-  { english: 'Thank you', assamese: 'ধন্যবাদ', phonetic: 'Dhonyobad' },
+  { english: 'Hello', assamese: 'নমস্কাৰ', phonetic: 'Nomoskar', audio: nomoskarAudio },
+  { english: 'Thank you', assamese: 'ধন্যবাদ', phonetic: 'Dhonyobad', audio: dhonyobadAudio },
   { english: 'How much?', assamese: 'কিমান হ\'ব?', phonetic: 'Kimant hobo?' },
   { english: 'Delicious!', assamese: 'বৰ সোৱাদ!', phonetic: 'Bor suwaad!' },
   { english: 'Where is...?', assamese: '...ত ক\'ত?', phonetic: '...kot?' },

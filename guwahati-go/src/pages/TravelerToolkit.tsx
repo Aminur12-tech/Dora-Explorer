@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import {
   ArrowLeft, Globe, Shield, AlertTriangle,
@@ -15,6 +16,58 @@ const TravelerToolkit = () => {
   const navigate = useNavigate();
   const [shareLocation, setShareLocation] = useState(false);
   const [activeTab, setActiveTab] = useState<'language' | 'safety'>('language');
+  const watchIdRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (watchIdRef.current !== null) {
+        navigator.geolocation.clearWatch(watchIdRef.current);
+      }
+    };
+  }, []);
+
+  const handleLocationToggle = (checked: boolean) => {
+    if (checked) {
+      if (!('geolocation' in navigator)) {
+        toast.error('Geolocation is not supported by your browser');
+        return;
+      }
+
+      toast.loading('Starting live location sharing...', { id: 'location-toast' });
+
+      const id = navigator.geolocation.watchPosition(
+        (position) => {
+          // In a real app, we would emit this to a socket/backend
+          const { latitude, longitude } = position.coords;
+          console.log('Sending location:', { latitude, longitude });
+
+          if (!watchIdRef.current) {
+            // Toast only on initial success to avoid spam, or update existing loading toast
+            toast.success('Live location enabled! Sharing with your guide.', { id: 'location-toast' });
+          }
+          setShareLocation(true);
+        },
+        (error) => {
+          console.error('Location error:', error);
+          toast.error('Failed to get location. Please check permissions.', { id: 'location-toast' });
+          setShareLocation(false);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0
+        }
+      );
+      watchIdRef.current = id;
+    } else {
+      if (watchIdRef.current !== null) {
+        navigator.geolocation.clearWatch(watchIdRef.current);
+        watchIdRef.current = null;
+      }
+      setShareLocation(false);
+      toast.info('Stopped sharing live location');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background pt-20 pb-8">
@@ -91,6 +144,7 @@ const TravelerToolkit = () => {
                   english={phrase.english}
                   assamese={phrase.assamese}
                   phonetic={phrase.phonetic}
+                  audio={phrase.audio}
                 />
               </motion.div>
             ))}
@@ -134,7 +188,7 @@ const TravelerToolkit = () => {
                 </div>
                 <Switch
                   checked={shareLocation}
-                  onCheckedChange={setShareLocation}
+                  onCheckedChange={handleLocationToggle}
                 />
               </div>
             </div>
