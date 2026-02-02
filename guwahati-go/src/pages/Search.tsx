@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Search as SearchIcon, X, MapPin, Clock } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { ExperienceCard } from '@/components/ExperienceCard';
-import { BottomNav } from '@/components/BottomNav';
+import { TopNav } from '@/components/TopNav';
 import { experiences } from '@/data/experiences';
 
 const recentSearches = [
@@ -18,17 +18,18 @@ const Search = () => {
   const [isFocused, setIsFocused] = useState(false);
 
   const filteredExperiences = query.length > 0
-    ? experiences.filter(exp => 
-        exp.title.toLowerCase().includes(query.toLowerCase()) ||
-        exp.description.toLowerCase().includes(query.toLowerCase()) ||
-        exp.category.toLowerCase().includes(query.toLowerCase())
-      )
+    ? experiences.filter(exp =>
+      exp.title.toLowerCase().includes(query.toLowerCase()) ||
+      exp.description.toLowerCase().includes(query.toLowerCase()) ||
+      exp.category.toLowerCase().includes(query.toLowerCase())
+    )
     : [];
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-background pt-20 pb-8">
+      <TopNav />
       {/* Search Header */}
-      <div className="sticky top-0 z-40 bg-background border-b border-border">
+      <div className="sticky top-16 z-40 bg-background border-b border-border">
         <div className="p-4">
           <div className="relative">
             <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
@@ -96,7 +97,7 @@ const Search = () => {
             <p className="text-muted-foreground mb-4">
               {filteredExperiences.length} results for "{query}"
             </p>
-            
+
             {filteredExperiences.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {filteredExperiences.map((exp, index) => (
@@ -115,7 +116,7 @@ const Search = () => {
         )}
       </div>
 
-      <BottomNav />
+
     </div>
   );
 };

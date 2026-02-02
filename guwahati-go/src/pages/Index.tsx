@@ -3,9 +3,12 @@ import { motion } from 'framer-motion';
 import { MapPin, ChevronRight } from 'lucide-react';
 import { FilterChips } from '@/components/FilterChips';
 import { ExperienceCard } from '@/components/ExperienceCard';
-import { BottomNav } from '@/components/BottomNav';
+import { TopNav } from '../components/TopNav';
+import { LocalHosts } from '../components/LocalHosts';
+import { MapDownloadSection } from '@/components/MapDownload';
+import { Footer } from '../components/Footer';
 import { experiences } from '@/data/experiences';
-import heroImage from '@/assets/brahmaputra-sunset.jpg';
+import heroImage from '@/assets/Brahma2.jpeg';
 
 const Index = () => {
   const [activeFilter, setActiveFilter] = useState('all');
@@ -19,21 +22,23 @@ const Index = () => {
   });
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-background pt-20">
+      <TopNav />
       {/* Hero Section */}
-      <div className="relative h-[45vh] min-h-[320px] overflow-hidden">
+      <div className="relative h-[75vh] min-h-[500px] overflow-hidden">
         <img
           src={heroImage}
           alt="Brahmaputra River at sunset"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-[center_75%]"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-foreground/20 to-transparent" />
-        
-        <div className="absolute inset-0 flex flex-col justify-end p-6">
+
+        <div className="absolute inset-0 flex flex-col justify-end p-6 items-center text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
+            className="flex flex-col items-center"
           >
             {/* Location Tag */}
             <div className="inline-flex items-center gap-1.5 bg-card/90 backdrop-blur-sm px-3 py-1.5 rounded-full mb-4">
@@ -41,18 +46,18 @@ const Index = () => {
               <span className="text-sm font-medium text-foreground">Guwahati, Assam</span>
             </div>
 
-            <h1 className="text-3xl md:text-4xl font-extrabold text-card leading-tight mb-2">
-              Got 3 hours in Guwahati?
+            <h1 className="text-3xl md:text-4xl font-extrabold text-black leading-tight mb-2">
+              Discover Guwahati in Minutes
             </h1>
-            <p className="text-card/80 text-base md:text-lg max-w-md">
-              Discover authentic local experiences in under 4 hours.
+            <p className="text-base text-black md:text-lg max-w-md">
+              Short-stay heritage and neighborhood experiences curated by locals. Perfect for layovers and quick breaks.
             </p>
           </motion.div>
         </div>
       </div>
 
       {/* Filter Section */}
-      <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-sm border-b border-border px-4 py-3">
+      <div className="sticky top-16 z-30 bg-background/95 backdrop-blur-sm border-b border-border px-4 py-3">
         <FilterChips activeFilter={activeFilter} onFilterChange={setActiveFilter} />
       </div>
 
@@ -91,7 +96,13 @@ const Index = () => {
         )}
       </div>
 
-      <BottomNav />
+      <LocalHosts />
+
+      <MapDownloadSection />
+
+      <Footer />
+
+
     </div>
   );
 };
