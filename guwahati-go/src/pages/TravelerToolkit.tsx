@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  ArrowLeft, Globe, Shield, AlertTriangle, 
-  MapPin, Phone, Siren 
+import {
+  ArrowLeft, Globe, Shield, AlertTriangle,
+  MapPin, Phone, Siren
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { LanguageCard } from '@/components/LanguageCard';
-import { BottomNav } from '@/components/BottomNav';
+import { TopNav } from '@/components/TopNav';
 import { languagePhrases } from '@/data/experiences';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
@@ -17,7 +17,8 @@ const TravelerToolkit = () => {
   const [activeTab, setActiveTab] = useState<'language' | 'safety'>('language');
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-background pt-20 pb-8">
+      <TopNav />
       {/* Header */}
       <div className="bg-gradient-hero text-primary-foreground px-5 pt-12 pb-8">
         <div className="flex items-center gap-4 mb-6">
@@ -41,22 +42,20 @@ const TravelerToolkit = () => {
         <div className="flex gap-2 p-1 bg-muted rounded-xl">
           <button
             onClick={() => setActiveTab('language')}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg font-medium transition-all ${
-              activeTab === 'language' 
-                ? 'bg-card shadow-sm text-foreground' 
-                : 'text-muted-foreground'
-            }`}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg font-medium transition-all ${activeTab === 'language'
+              ? 'bg-card shadow-sm text-foreground'
+              : 'text-muted-foreground'
+              }`}
           >
             <Globe className="w-4 h-4" />
             Language
           </button>
           <button
             onClick={() => setActiveTab('safety')}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg font-medium transition-all ${
-              activeTab === 'safety' 
-                ? 'bg-card shadow-sm text-foreground' 
-                : 'text-muted-foreground'
-            }`}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg font-medium transition-all ${activeTab === 'safety'
+              ? 'bg-card shadow-sm text-foreground'
+              : 'text-muted-foreground'
+              }`}
           >
             <Shield className="w-4 h-4" />
             Safety
@@ -145,7 +144,7 @@ const TravelerToolkit = () => {
               <h3 className="font-semibold text-foreground mb-4">
                 Emergency Contacts
               </h3>
-              
+
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -207,7 +206,7 @@ const TravelerToolkit = () => {
         )}
       </div>
 
-      <BottomNav />
+
     </div>
   );
 };

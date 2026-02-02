@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion';
-import { 
-  User, Settings, Heart, Calendar, 
+import {
+  User, Settings, Heart, Calendar,
   Bell, HelpCircle, LogOut, ChevronRight,
   Star, MapPin
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { BottomNav } from '@/components/BottomNav';
+import { TopNav } from '@/components/TopNav';
 import { Button } from '@/components/ui/button';
 
 const menuItems = [
@@ -18,7 +18,8 @@ const menuItems = [
 
 const Profile = () => {
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-background pt-20 pb-8">
+      <TopNav />
       {/* Profile Header */}
       <div className="bg-gradient-hero text-primary-foreground px-5 pt-12 pb-8">
         <div className="flex items-center gap-4 mb-6">
@@ -112,7 +113,7 @@ const Profile = () => {
         </p>
       </div>
 
-      <BottomNav />
+
     </div>
   );
 };

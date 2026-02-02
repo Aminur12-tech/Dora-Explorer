@@ -1,9 +1,15 @@
-import brahmaputraSunset from '@/assets/brahmaputra-sunset.jpg';
-import teaTasting from '@/assets/tea-tasting.jpg';
+import brahmaputraSunset from '@/assets/Brahma2.jpeg';
+import teaTasting from '@/assets/20251115_192921.jpg';
 import silkWeaving from '@/assets/silk-weaving.jpg';
-import kamakhyaTemple from '@/assets/kamakhya-temple.jpg';
+import kamakhyaTemple from '@/assets/Kamakhya.jpeg';
 import spiceMarket from '@/assets/spice-market.jpg';
 import tribalArt from '@/assets/tribal-art.jpg';
+import bikashPhoto from '@/assets/Bikash.jpeg';
+import priyankaPhoto from '@/assets/Priyanka.jpeg';
+import anjaliPhoto from '@/assets/Anjali.jpeg';
+import dipankarPhoto from '@/assets/Dipankar.jpeg';
+import aminurPhoto from '@/assets/Aminur.jpeg';
+import rupjyotiPhoto from '@/assets/Rupjyoti.jpeg';
 
 export interface Experience {
   id: string;
@@ -33,11 +39,11 @@ export const experiences: Experience[] = [
     shortDescription: 'Scenic riverside walk with local stories',
     image: brahmaputraSunset,
     duration: 90,
-    price: 850,
+    price: 100,
     rating: 4.9,
     reviewCount: 127,
     hostName: 'Bikash Kalita',
-    hostImage: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Bikash',
+    hostImage: bikashPhoto,
     hostBio: 'Born by the Brahmaputra, I\'ve spent my life learning its rhythms. As a local photographer and storyteller, I love sharing the magic of our river with visitors from around the world.',
     category: 'nature',
     spotsLeft: 4,
@@ -46,9 +52,9 @@ export const experiences: Experience[] = [
     timeSlots: ['4:00 PM', '4:30 PM', '5:00 PM']
   },
   {
-    id: 'panbazar-tea',
+    id: 'fancy bazar',
     title: 'Panbazar Tea Tasting',
-    description: 'Dive into Assam\'s famous tea culture at historic Panbazar. Visit traditional tea stalls, learn the art of brewing the perfect Assamese chai, and taste rare single-estate teas. Includes visits to century-old shops and local snacks.',
+    description: 'Dive into Assam\'s famous tea culture at historic fancy bazar and panbazar. Visit traditional tea stalls, learn the art of brewing the perfect Assamese chai, and taste rare single-estate teas. Includes visits to century-old shops and local snacks.',
     shortDescription: 'Authentic Assamese tea experience',
     image: teaTasting,
     duration: 120,
@@ -56,7 +62,7 @@ export const experiences: Experience[] = [
     rating: 4.8,
     reviewCount: 89,
     hostName: 'Priyanka Bora',
-    hostImage: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Priyanka',
+    hostImage: priyankaPhoto,
     hostBio: 'My family has been in the tea trade for three generations. I grew up smelling the aroma of fresh Assam leaves and now love introducing travelers to our chai traditions.',
     category: 'food',
     spotsLeft: 2,
@@ -75,7 +81,7 @@ export const experiences: Experience[] = [
     rating: 5.0,
     reviewCount: 56,
     hostName: 'Rupjyoti Das',
-    hostImage: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Rupjyoti',
+    hostImage: rupjyotiPhoto,
     hostBio: 'I come from a family of weavers. Every thread tells a story, and I\'m passionate about keeping our silk heritage alive while sharing it with curious travelers.',
     category: 'craft',
     spotsLeft: 3,
@@ -90,11 +96,11 @@ export const experiences: Experience[] = [
     shortDescription: 'Guided temple visit with queue skip',
     image: kamakhyaTemple,
     duration: 150,
-    price: 950,
+    price: 550,
     rating: 4.7,
     reviewCount: 203,
     hostName: 'Dipankar Sharma',
-    hostImage: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Dipankar',
+    hostImage: dipankarPhoto,
     hostBio: 'As a temple priest\'s son, I grew up in the shadow of Kamakhya. I offer respectful tours that help visitors understand our traditions while honoring the sacred space.',
     category: 'spiritual',
     spotsLeft: 6,
@@ -109,11 +115,11 @@ export const experiences: Experience[] = [
     shortDescription: 'Market exploration with food tastings',
     image: spiceMarket,
     duration: 180,
-    price: 1100,
+    price: 130,
     rating: 4.9,
     reviewCount: 145,
     hostName: 'Anjali Hazarika',
-    hostImage: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Anjali',
+    hostImage: anjaliPhoto,
     hostBio: 'Fancy Bazar is my playground! I know every corner, every vendor, and every hidden gem. Let me show you the real flavors of Assam through its bustling markets.',
     category: 'food',
     spotsLeft: 5,
@@ -128,11 +134,11 @@ export const experiences: Experience[] = [
     shortDescription: 'Hands-on traditional art creation',
     image: tribalArt,
     duration: 180,
-    price: 1250,
+    price: 1050,
     rating: 4.8,
     reviewCount: 78,
-    hostName: 'Monika Brahma',
-    hostImage: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Monika',
+    hostName: 'Aminur Islam',
+    hostImage: aminurPhoto,
     hostBio: 'I\'m a Bodo artist preserving our tribal heritage through art. Every pattern I teach carries centuries of meaning, and I love passing this knowledge to new generations.',
     category: 'culture',
     spotsLeft: 4,

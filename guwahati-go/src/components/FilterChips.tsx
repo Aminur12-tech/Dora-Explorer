@@ -23,9 +23,8 @@ export const FilterChips = ({ activeFilter, onFilterChange }: FilterChipsProps) 
           key={filter.id}
           whileTap={{ scale: 0.95 }}
           onClick={() => onFilterChange(filter.id)}
-          className={`filter-chip flex items-center gap-1.5 ${
-            activeFilter === filter.id ? 'active' : ''
-          }`}
+          className={`filter-chip flex items-center gap-1.5 ${activeFilter === filter.id ? 'active' : ''
+            }`}
         >
           {filter.icon && <filter.icon className="w-3.5 h-3.5" />}
           {filter.label}
