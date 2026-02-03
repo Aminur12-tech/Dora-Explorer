@@ -69,13 +69,13 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Get all merchants (admin only)
+// Get all merchants
 router.get('/', async (req, res) => {
   try {
-    const merchants = await Merchant.find().sort({ createdAt: -1 });
+    const merchants = await Merchant.find();
     res.json(merchants);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 
@@ -231,6 +231,41 @@ router.get('/:id/stats', async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+});
+
+// POST /api/merchant/register
+router.post('/register', async (req, res) => {
+  try {
+    const { businessName, ownerName, email, phone, businessType, description, address, bio, tagline, price } = req.body;
+
+    if (!businessName || !ownerName || !email || !phone) {
+      return res.status(400).json({ message: 'Missing required fields' });
+    }
+
+    const merchant = await Merchant.create({
+      businessName,
+      ownerName,
+      email,
+      phone,
+      businessType,
+      description,
+      address,
+      bio,
+      tagline,
+      price: price || 500,
+      isVerified: false,
+      status: 'pending'
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Merchant registered successfully',
+      merchant
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: err.message });
   }
 });
 

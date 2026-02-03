@@ -2,20 +2,14 @@ import { Home, Search, Briefcase, User, Globe } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
-const navItems = [
-  { path: '/', icon: Home, label: 'Home' },
-  { path: '/search', icon: Search, label: 'Search' },
-  { path: '/toolkit', icon: Globe, label: 'Toolkit' },
-  { path: '/merchant', icon: Briefcase, label: 'Host' },
-  { path: '/profile', icon: User, label: 'Profile' },
-];
+import { navItems } from './navItems';
 
 export const BottomNav = () => {
   const location = useLocation();
 
   return (
     <nav className="bottom-nav">
-      {navItems.map((item) => {
+      {navItems.filter(i => i.mobile).map((item) => {
         const isActive = location.pathname === item.path;
         return (
           <Link key={item.path} to={item.path}>

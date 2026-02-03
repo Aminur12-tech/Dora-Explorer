@@ -164,16 +164,20 @@ export const experiences: Experience[] = [
 
 import nomoskarAudio from '@/assets/Nomoskar.m4a.mp4';
 import dhonyobadAudio from '@/assets/Dhonyobad.m4a.mp4';
+import paniAudio from '@/assets/Pani.m4a.mp4';
+import hoiAudio from '@/assets/Hoi.m4a.mp4';
+import kimanAudio from '@/assets/Kiman hobo.m4a.mp4';
+
 
 export const languagePhrases = [
   { english: 'Hello', assamese: 'নমস্কাৰ', phonetic: 'Nomoskar', audio: nomoskarAudio },
   { english: 'Thank you', assamese: 'ধন্যবাদ', phonetic: 'Dhonyobad', audio: dhonyobadAudio },
-  { english: 'How much?', assamese: 'কিমান হ\'ব?', phonetic: 'Kimant hobo?' },
+  { english: 'How much?', assamese: 'কিমান হ\'ব?', phonetic: 'Kimant hobo?', audio: kimanAudio },
   { english: 'Delicious!', assamese: 'বৰ সোৱাদ!', phonetic: 'Bor suwaad!' },
   { english: 'Where is...?', assamese: '...ত ক\'ত?', phonetic: '...kot?' },
   { english: 'Help!', assamese: 'সহায় কৰক!', phonetic: 'Sahay korok!' },
-  { english: 'Yes', assamese: 'হয়', phonetic: 'Hoy' },
+  { english: 'Yes', assamese: 'হয়', phonetic: 'Hoy', audio: hoiAudio },
   { english: 'No', assamese: 'নহয়', phonetic: 'Nohoy' },
-  { english: 'Water', assamese: 'পানী', phonetic: 'Pani' },
+  { english: 'Water', assamese: 'পানী', phonetic: 'Pani', audio: paniAudio},
   { english: 'Beautiful', assamese: 'ধুনীয়া', phonetic: 'Dhuniya' }
 ];

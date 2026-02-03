@@ -1,39 +1,35 @@
-import { motion } from 'framer-motion';
+import React from 'react';
 
-interface TimeSlotPickerProps {
+interface Props {
   slots: string[];
   selectedSlot: string | null;
-  onSelectSlot: (slot: string) => void;
-  spotsLeft: number;
+  onSelectSlot: (s: string) => void;
+  spotsLeft?: number;
 }
 
-export const TimeSlotPicker = ({ 
-  slots, 
-  selectedSlot, 
-  onSelectSlot,
-  spotsLeft 
-}: TimeSlotPickerProps) => {
+export const TimeSlotPicker: React.FC<Props> = ({ slots = [], selectedSlot, onSelectSlot, spotsLeft = 10 }) => {
+  if (!slots.length) return <div className="p-3 text-sm text-muted-foreground">No slots available</div>;
   return (
-    <div className="space-y-3">
-      <div className="flex items-center justify-between">
-        <h4 className="font-semibold text-foreground">Select Time Slot</h4>
-        <span className="text-sm text-secondary font-medium">
-          {spotsLeft} spots left
-        </span>
+    <div className="space-y-2">
+      <div className="flex items-center justify-between text-sm text-muted-foreground mb-2">
+        <span>Choose a time</span>
+        <span>{spotsLeft} spots</span>
       </div>
-      
-      <div className="grid grid-cols-3 gap-3">
-        {slots.map((slot) => (
-          <motion.button
-            key={slot}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => onSelectSlot(slot)}
-            className={`time-slot ${selectedSlot === slot ? 'selected' : ''}`}
+      <div className="flex gap-2 flex-wrap">
+        {slots.map((s) => (
+          <button
+            key={s}
+            onClick={() => onSelectSlot(s)}
+            className={`px-3 py-2 rounded-lg text-sm border ${
+              selectedSlot === s ? 'bg-primary text-primary-foreground border-primary' : 'bg-card border-border'
+            }`}
           >
-            <span className="text-sm font-medium">{slot}</span>
-          </motion.button>
+            {s}
+          </button>
         ))}
       </div>
     </div>
   );
 };
+
+export default TimeSlotPicker;

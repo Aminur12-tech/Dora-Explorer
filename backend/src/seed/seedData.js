@@ -93,6 +93,7 @@ async function seed() {
                 minParticipants: 1,
                 maxParticipants: 10,
                 status: "active",
+                timeSlots: ["09:00", "11:00", "14:00", "16:00"],
                 merchantId: merchants[0]._id
             },
             {

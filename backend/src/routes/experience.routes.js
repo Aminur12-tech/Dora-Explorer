@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Experience = require('../models/Experience');
 const Merchant = require('../models/Merchant');
+const crypto = require('crypto');
+const Booking = require('../models/Booking');
 
 // Get all experiences (Discover)
 router.get('/discover', async (req, res) => {
@@ -175,6 +177,49 @@ router.get('/filter/difficulty/:level', async (req, res) => {
     res.json(experiences);
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+});
+
+// POST /api/experience/booking
+router.post('/booking', async (req, res) => {
+  try {
+    const { experienceId, slot, participants, amount, name, email, phone } = req.body;
+    const bookingId = `bk_${Date.now()}`;
+    const bookingToken = req.body.bookingToken || crypto.randomBytes(8).toString('hex');
+
+    const booking = await Booking.create({
+      bookingId,
+      experienceId,
+      slot,
+      participants,
+      amount,
+      name,
+      email,
+      phone,
+      bookingToken,
+      status: 'pending'
+    });
+
+    return res.status(201).json({ success: true, bookingId: booking.bookingId, booking });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: err.message || 'Booking error' });
+  }
+});
+
+// GET /api/experience/booking/:id
+router.get('/booking/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const booking = await Booking.findOne({ bookingId: id }).populate({
+      path: 'experienceId',
+      select: 'title price duration area meetingPoint'
+    });
+    if (!booking) return res.status(404).json({ success: false, message: 'Booking not found' });
+    res.json({ success: true, booking });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: err.message });
   }
 });
 

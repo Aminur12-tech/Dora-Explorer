@@ -11,6 +11,7 @@ import { TopNav } from '@/components/TopNav';
 import { languagePhrases } from '@/data/experiences';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
+import Navbar from '@/components/Navbar';
 
 const TravelerToolkit = () => {
   const navigate = useNavigate();
@@ -71,8 +72,7 @@ const TravelerToolkit = () => {
 
   return (
     <div className="min-h-screen bg-background pt-20 pb-8">
-      <TopNav />
-      {/* Header */}
+      <Navbar/>
       <div className="bg-gradient-hero text-primary-foreground px-5 pt-12 pb-8">
         <div className="flex items-center gap-4 mb-6">
           <motion.button

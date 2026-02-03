@@ -1,31 +1,27 @@
 const mongoose = require('mongoose');
 
-const BookingSchema = new mongoose.Schema(
+const bookingSchema = new mongoose.Schema(
   {
+    bookingId: { type: String, required: true, unique: true },
     experienceId: { type: mongoose.Schema.Types.ObjectId, ref: 'Experience', required: true },
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    merchantId: { type: mongoose.Schema.Types.ObjectId, ref: 'Merchant' },
-    name: { type: String },
-    email: { type: String },
-    phone: { type: String },
-    amount: { type: Number, required: true },
-    currency: { type: String, default: 'INR' },
-    status: {
+    slot: String,
+    participants: Number,
+    amount: Number,
+    name: String,
+    email: String,
+    phone: String,
+    bookingToken: {
       type: String,
-      enum: ['requested', 'confirmed', 'paid', 'completed', 'cancelled', 'rejected'],
-      default: 'requested'
+      default: null,
+      sparse: true,
+      unique: true
     },
-    requestedAt: { type: Date, default: Date.now },
-    confirmedAt: Date,
-    rejectedAt: Date,
-    rejectionReason: String,
-    razorpayOrderId: String,
-    razorpayPaymentId: String,
-    razorpaySignature: String,
-    notes: String,
-    participants: Number // number of people
+    status: { type: String, enum: ['pending', 'confirmed', 'rejected'], default: 'pending' }
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model('Booking', BookingSchema);
+// Create sparse unique index on bookingToken
+bookingSchema.index({ bookingToken: 1 }, { unique: true, sparse: true });
+
+module.exports = mongoose.model('Booking', bookingSchema);

@@ -1,29 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Loader2, MapPin, Star, Clock, Users } from 'lucide-react';
+import gallery1 from '@/assets/kamakhya-temple.jpg';
+import gallery2 from '@/assets/silk-weaving.jpg';
+import gallery3 from '@/assets/spice-market.jpg';
+import { Loader2, MapPin, Star, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { fetchDiscoverExperiences } from '@/api/experience.api';
 
-interface Experience {
-    _id: string;
-    title: string;
-    description: string;
-    image: string;
-    price: number;
-    duration: number;
-    rating: number;
-    area: string;
-    category: string;
-    merchant: {
-        businessName: string;
-        isVerified: boolean;
-    };
-}
-
-export const Discover = () => {
+const Discover = () => {
     const navigate = useNavigate();
-    const [experiences, setExperiences] = useState<Experience[]>([]);
+    const [experiences, setExperiences] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -33,8 +19,10 @@ export const Discover = () => {
             try {
                 setLoading(true);
                 setError(null);
-                const data = await fetchDiscoverExperiences();
-                setExperiences(data);
+                const res = await fetch('http://localhost:5000/api/experience/discover');
+                if (!res.ok) throw new Error('Failed to fetch');
+                const data = await res.json();
+                setExperiences(Array.isArray(data) ? data : []);
             } catch (err: any) {
                 setError(err.message || 'Failed to load experiences');
                 console.error('Error:', err);
@@ -61,24 +49,33 @@ export const Discover = () => {
     }
 
     return (
-        <div className="min-h-screen bg-background pb-20">
+        <div className="min-h-screen bg-background pb-20 md:pt-24">
             {/* Header */}
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="sticky top-0 z-40 bg-card/95 backdrop-blur-sm border-b border-border p-4"
             >
-                <h1 className="text-2xl font-bold text-foreground mb-4">Discover Experiences</h1>
+                <div className="flex items-center justify-between mb-4">
+                    <h1 className="text-2xl font-bold text-foreground">Discover</h1>
+                    <Button
+                        onClick={() => navigate('/merchant/onboard')}
+                        variant="outline"
+                        size="sm"
+                    >
+                        Become a Host
+                    </Button>
+                </div>
 
                 {/* Category Filter */}
                 <div className="flex gap-2 overflow-x-auto pb-2">
                     {categories.map((cat) => (
                         <button
                             key={cat}
-                            onClick={() => setSelectedCategory(cat)}
+                            onClick={() => setSelectedCategory(cat === 'All' ? null : cat)}
                             className={`px-4 py-2 rounded-full whitespace-nowrap transition ${selectedCategory === cat || (cat === 'All' && !selectedCategory)
-                                    ? 'bg-primary text-primary-foreground'
-                                    : 'bg-muted text-foreground hover:bg-muted/80'
+                                ? 'bg-primary text-primary-foreground'
+                                : 'bg-muted text-foreground hover:bg-muted/80'
                                 }`}
                         >
                             {cat}
@@ -94,6 +91,19 @@ export const Discover = () => {
             )}
 
             {/* Experiences Grid */}
+            {/* Small Gallery */}
+            <div className="p-4">
+                <div className="max-w-6xl mx-auto">
+                    <h3 className="text-xl font-semibold text-foreground mb-4">Gallery</h3>
+                    <div className="grid grid-cols-3 gap-3 mb-6">
+                        {[gallery1, gallery2, gallery3].map((src, i) => (
+                            <div key={i} className="rounded-lg overflow-hidden bg-muted">
+                                <img src={src} alt={`Gallery ${i + 1}`} className="w-full h-28 object-cover" />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
             <div className="p-4">
                 {filteredExperiences.length === 0 ? (
                     <div className="text-center py-10">
@@ -107,7 +117,7 @@ export const Discover = () => {
                     >
                         {filteredExperiences.map((experience, index) => (
                             <motion.div
-                                key={experience._id}
+                                key={experience._id || index}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: index * 0.1 }}
@@ -115,13 +125,16 @@ export const Discover = () => {
                                 className="bg-card rounded-2xl overflow-hidden shadow-card hover:shadow-lg transition cursor-pointer"
                             >
                                 {/* Image */}
-                                <div className="relative h-60 overflow-hidden bg-muted">
+                                <div className="relative h-48 overflow-hidden bg-muted">
                                     <img
                                         src={experience.image}
                                         alt={experience.title}
                                         className="w-full h-full object-cover hover:scale-105 transition"
+                                        onError={(e) => {
+                                            (e.target as any).src = 'https://via.placeholder.com/300x200?text=Experience';
+                                        }}
                                     />
-                                    <div className="absolute bottom-3 right-3 bg-card/90 backdrop-blur-sm px-3 py-1 rounded-full">
+                                    <div className="absolute top-3 right-3 bg-card/90 backdrop-blur-sm px-3 py-1 rounded-full">
                                         <p className="text-sm font-semibold text-primary">₹{experience.price}</p>
                                     </div>
                                 </div>
@@ -139,7 +152,7 @@ export const Discover = () => {
                                         </span>
                                         <span className="flex items-center gap-1">
                                             <Star className="w-3 h-3 fill-current text-yellow-500" />
-                                            {experience.rating.toFixed(1)}
+                                            {experience.rating?.toFixed(1) || 'N/A'}
                                         </span>
                                     </div>
 
@@ -147,19 +160,38 @@ export const Discover = () => {
                                         <MapPin className="w-3 h-3 mt-0.5 flex-shrink-0" />
                                         <span className="line-clamp-1">{experience.area}</span>
                                     </div>
-
-                                    <div className="flex items-center justify-between pt-3 border-t border-border">
-                                        <span className="text-xs font-medium text-foreground">
-                                            {experience.merchant.businessName}
-                                        </span>
-                                        {experience.merchant.isVerified && (
-                                            <span className="text-xs bg-success/10 text-success px-2 py-1 rounded">
-                                                ✓ Verified
-                                            </span>
-                                        )}
-                                    </div>
                                 </div>
-                                
+
+                                {/* Merchant Info - Clickable */}
+                                <div className="flex items-center justify-between pt-3 border-t border-border">
+                                    <button
+                                        onClick={() => {
+                                            console.log('Vendor ID:', experience.merchant?._id);
+                                            navigate(`/vendor/${experience.merchant?._id}`);
+                                        }}
+                                        className="text-xs font-medium text-foreground hover:text-primary transition cursor-pointer flex-1 text-left"
+                                    >
+                                        {experience.merchant?.businessName || 'Local Host'}
+                                    </button>
+                                    {experience.merchant?.isVerified && (
+                                        <span className="text-xs bg-success/10 text-success px-2 py-1 rounded">
+                                            ✓ Verified
+                                        </span>
+                                    )}
+                                </div>
+
+                                {/* Button */}
+                                <div className="p-4 pt-0">
+                                    <Button
+                                        className="w-full h-10"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            navigate(`/experience/${experience._id}`);
+                                        }}
+                                    >
+                                        View Details
+                                    </Button>
+                                </div>
                             </motion.div>
                         ))}
                     </motion.div>

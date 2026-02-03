@@ -3,6 +3,14 @@ import { MapPin, Download } from 'lucide-react';
 import guidePdf from '../assets/Pdf.pdf';
 import Map from './Map';
 
+const MapDownload = ({ latitude = 26.1445, longitude = 91.7362, title = 'Meeting Point' }: any) => {
+    return (
+        <div className="w-full rounded-lg overflow-hidden">
+            <Map latitude={latitude} longitude={longitude} title={title} />
+        </div>
+    );
+};
+
 export const MapDownloadSection = () => {
     return (
         <div className="bg-white py-12 px-4">
@@ -43,3 +51,5 @@ export const MapDownloadSection = () => {
         </div>
     );
 };
+
+export default MapDownload;

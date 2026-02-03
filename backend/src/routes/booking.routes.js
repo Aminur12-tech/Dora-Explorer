@@ -150,7 +150,7 @@ router.put('/:id/cancel', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-}); 
+});
 
 // Request a booking (user initiates)
 router.post('/request', async (req, res) => {
@@ -215,6 +215,25 @@ router.put('/:id/confirm', async (req, res) => {
   }
 });
 
+// GET all bookings
+router.get('/', async (req, res) => {
+  try {
+    const bookings = await Booking.find().populate('experienceId');
+    res.json(bookings);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
+// GET booking by id
+router.get('/:id', async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.params.id).populate('experienceId');
+    if (!booking) return res.status(404).json({ message: 'Booking not found' });
+    res.json(booking);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 module.exports = router;
