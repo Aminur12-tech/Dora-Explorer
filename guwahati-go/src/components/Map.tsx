@@ -1,57 +1,38 @@
-
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import { Icon } from 'leaflet';
 import { useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 
-// Fix for default marker icon
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-
-const defaultIcon = new Icon({
-    iconUrl: icon,
-    shadowUrl: iconShadow,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41]
+// Fix default marker icons
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
+    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
 });
 
 interface MapProps {
-    center?: [number, number];
-    zoom?: number;
-    markers?: Array<{
-        position: [number, number];
-        title: string;
-    }>;
+    latitude: number;
+    longitude: number;
+    title?: string;
 }
 
-export const MapComponent = ({
-    center = [26.1445, 91.7362],
-    zoom = 13,
-    markers = [
-        { position: [26.1445, 91.7362], title: "Guwahati City Center" },
-        { position: [26.1667, 91.7167], title: "Kamakhya Temple" }
-    ]
-}: MapProps) => {
-
+const Map = ({ latitude, longitude, title = 'Location' }: MapProps) => {
     return (
         <MapContainer
-            center={center}
-            zoom={zoom}
-            scrollWheelZoom={false}
-            className="w-full h-full min-h-[300px] z-0"
-            style={{ height: "100%", width: "100%", borderRadius: "0.5rem" }}
+            center={[latitude, longitude]}
+            zoom={15}
+            style={{ height: '300px', width: '100%', borderRadius: '12px' }}
         >
             <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
-            {markers.map((marker, index) => (
-                <Marker key={index} position={marker.position} icon={defaultIcon}>
-                    <Popup>
-                        {marker.title}
-                    </Popup>
-                </Marker>
-            ))}
+            <Marker position={[latitude, longitude]}>
+                <Popup>{title}</Popup>
+            </Marker>
         </MapContainer>
     );
 };
+
+export default Map;

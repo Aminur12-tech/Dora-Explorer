@@ -1,8 +1,7 @@
-
 import { MapPin, Download } from 'lucide-react';
 
 import guidePdf from '../assets/Pdf.pdf';
-import { MapComponent } from './Map';
+import Map from './Map';
 
 export const MapDownloadSection = () => {
     return (
@@ -18,7 +17,7 @@ export const MapDownloadSection = () => {
                         <span className="text-primary text-sm font-medium cursor-pointer">View Larger</span>
                     </div>
                     <div className="flex-1 relative z-0">
-                        <MapComponent />
+                        <Map latitude={26.1445} longitude={91.7362} title="Meeting Point" />
                     </div>
                 </div>
 
