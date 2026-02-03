@@ -1,27 +1,81 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  ArrowLeft, Clock, Star, MapPin, Check, 
-  Share2, Heart, BadgeCheck, Users, Loader2 
+import {
+  ArrowLeft, Clock, Star, MapPin, Check,
+  Share2, Heart, BadgeCheck, Users, Loader2, Calendar, DollarSign
 } from 'lucide-react';
-import { experiences } from '@/data/experiences';
-import { TimeSlotPicker } from '@/components/TimeSlotPicker';
 import { Button } from '@/components/ui/button';
+import { fetchExperienceById } from '@/api/experience.api';
+import { requestBooking } from '@/api/booking.api';
+
+interface Experience {
+  _id: string;
+  title: string;
+  description: string;
+  image?: string;
+  price: number;
+  duration: number;
+  rating: number;
+  area: string;
+  meetingPoint: string;
+  merchantId: string;
+  category?: string;
+  highlights?: string[];
+  included?: string[];
+  notIncluded?: string[];
+  maxParticipants?: number;
+  minParticipants?: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
 
 const ExperienceDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [experience, setExperience] = useState<Experience | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [isBooking, setIsBooking] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const [participants, setParticipants] = useState(1);
 
-  const experience = experiences.find((exp) => exp.id === id);
+  // Fetch experience data
+  useEffect(() => {
+    const loadExperience = async () => {
+      try {
+        setLoading(true);
+        if (id) {
+          const data = await fetchExperienceById(id);
+          setExperience(data);
+          setParticipants(data.minParticipants || 1);
+        }
+      } catch (err: any) {
+        setError(err.message || 'Failed to load experience');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  if (!experience) {
+    loadExperience();
+  }, [id]);
+
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <p className="text-muted-foreground">Experience not found</p>
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (error || !experience) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <p className="text-muted-foreground mb-4">{error || 'Experience not found'}</p>
+          <Button onClick={() => navigate(-1)}>Go Back</Button>
+        </div>
       </div>
     );
   }
@@ -35,11 +89,27 @@ const ExperienceDetail = () => {
 
   const handleBookNow = async () => {
     if (!selectedSlot) return;
-    
-    setIsBooking(true);
-    // Simulate booking API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    navigate(`/booking-confirmed/${experience.id}?slot=${encodeURIComponent(selectedSlot)}`);
+
+    try {
+      setIsBooking(true);
+      const bookingData = {
+        experienceId: experience._id,
+        merchantId: experience.merchantId,
+        name: 'User Name', // Get from auth/user context
+        email: 'user@example.com', // Get from auth/user context
+        phone: '9876543210', // Get from auth/user context
+        amount: experience.price * participants,
+        participants,
+        notes: `Booking for ${selectedSlot}`
+      };
+
+      const response = await requestBooking(bookingData);
+      navigate(`/booking-confirmed/${response.bookingId}?slot=${encodeURIComponent(selectedSlot)}`);
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to request booking');
+    } finally {
+      setIsBooking(false);
+    }
   };
 
   return (
@@ -50,7 +120,7 @@ const ExperienceDetail = () => {
           initial={{ scale: 1.1 }}
           animate={{ scale: 1 }}
           transition={{ duration: 0.8 }}
-          src={experience.image}
+          src={experience.image || 'https://via.placeholder.com/400'}
           alt={experience.title}
           className="w-full h-full object-cover"
         />
@@ -95,17 +165,28 @@ const ExperienceDetail = () => {
         <div className="bg-card rounded-2xl p-5 shadow-card mb-5">
           <div className="flex items-start justify-between mb-3">
             <div className="flex-1">
-              <h1 className="text-2xl font-bold text-foreground mb-2">
-                {experience.title}
-              </h1>
-              <div className="flex items-center gap-4 text-sm">
+              <div className="flex items-center gap-2 mb-2">
+                <h1 className="text-2xl font-bold text-foreground">
+                  {experience.title}
+                </h1>
+                {experience.category && (
+                  <span className="px-3 py-1 bg-primary/10 text-primary text-xs rounded-full">
+                    {experience.category}
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-4 text-sm flex-wrap">
                 <span className="flex items-center gap-1 text-muted-foreground">
                   <Clock className="w-4 h-4" />
                   {formatDuration(experience.duration)}
                 </span>
                 <span className="flex items-center gap-1 text-success">
                   <Star className="w-4 h-4 fill-current" />
-                  {experience.rating} ({experience.reviewCount})
+                  {experience.rating.toFixed(1)}
+                </span>
+                <span className="flex items-center gap-1 text-muted-foreground">
+                  <MapPin className="w-4 h-4" />
+                  {experience.area}
                 </span>
               </div>
             </div>
@@ -121,77 +202,152 @@ const ExperienceDetail = () => {
           </div>
         </div>
 
-        {/* Host Section */}
-        <div className="bg-card rounded-2xl p-5 shadow-card mb-5">
-          <h3 className="font-semibold text-foreground mb-4">Meet Your Host</h3>
-          <div className="flex items-start gap-4">
-            <img
-              src={experience.hostImage}
-              alt={experience.hostName}
-              className="w-16 h-16 rounded-full bg-muted"
-            />
-            <div className="flex-1">
-              <p className="font-semibold text-foreground">{experience.hostName}</p>
-              <p className="text-sm text-muted-foreground italic mb-2">
-                "Why I love GHY"
-              </p>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {experience.hostBio}
-              </p>
-            </div>
-          </div>
-        </div>
-
         {/* Description */}
         <div className="bg-card rounded-2xl p-5 shadow-card mb-5">
           <h3 className="font-semibold text-foreground mb-3">About This Experience</h3>
-          <p className="text-muted-foreground leading-relaxed mb-4">
+          <p className="text-muted-foreground leading-relaxed">
             {experience.description}
           </p>
-
-          <h4 className="font-semibold text-foreground mb-2">Highlights</h4>
-          <ul className="space-y-2">
-            {experience.highlights.map((highlight, index) => (
-              <li key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
-                <div className="w-5 h-5 rounded-full bg-success/10 flex items-center justify-center">
-                  <Check className="w-3 h-3 text-success" />
-                </div>
-                {highlight}
-              </li>
-            ))}
-          </ul>
         </div>
+
+        {/* What's Included & Not Included */}
+        {(experience.included || experience.notIncluded) && (
+          <div className="bg-card rounded-2xl p-5 shadow-card mb-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {experience.included && experience.included.length > 0 && (
+                <div>
+                  <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
+                    <Check className="w-5 h-5 text-success" />
+                    What's Included
+                  </h4>
+                  <ul className="space-y-2">
+                    {experience.included.map((item, index) => (
+                      <li key={index} className="flex items-start gap-2 text-sm text-muted-foreground">
+                        <Check className="w-4 h-4 text-success mt-0.5 flex-shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {experience.notIncluded && experience.notIncluded.length > 0 && (
+                <div>
+                  <h4 className="font-semibold text-foreground mb-3">What's Not Included</h4>
+                  <ul className="space-y-2">
+                    {experience.notIncluded.map((item, index) => (
+                      <li key={index} className="text-sm text-muted-foreground">
+                        • {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Highlights */}
+        {experience.highlights && experience.highlights.length > 0 && (
+          <div className="bg-card rounded-2xl p-5 shadow-card mb-5">
+            <h3 className="font-semibold text-foreground mb-3">Highlights</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {experience.highlights.map((highlight, index) => (
+                <div key={index} className="flex items-start gap-2">
+                  <Check className="w-5 h-5 text-success mt-0.5 flex-shrink-0" />
+                  <p className="text-sm text-muted-foreground">{highlight}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Meeting Point */}
         <div className="bg-card rounded-2xl p-5 shadow-card mb-5">
           <h3 className="font-semibold text-foreground mb-3">Meeting Point</h3>
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
               <MapPin className="w-5 h-5 text-primary" />
             </div>
             <div>
               <p className="text-foreground font-medium">{experience.meetingPoint}</p>
               <p className="text-sm text-muted-foreground mt-1">
-                Exact location shared after booking
+                Area: {experience.area}
               </p>
             </div>
           </div>
-          
-          {/* Map Placeholder */}
-          <div className="mt-4 h-32 bg-muted rounded-xl flex items-center justify-center">
-            <p className="text-muted-foreground text-sm">Map preview</p>
+        </div>
+
+        {/* Participants Selector */}
+        <div className="bg-card rounded-2xl p-5 shadow-card mb-5">
+          <h3 className="font-semibold text-foreground mb-3">Number of Participants</h3>
+          <p className="text-xs text-muted-foreground mb-3">
+            {experience.minParticipants && `Min: ${experience.minParticipants}`}
+            {experience.maxParticipants && ` | Max: ${experience.maxParticipants}`}
+          </p>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setParticipants(Math.max(experience.minParticipants || 1, participants - 1))}
+              className="w-10 h-10 rounded-full bg-muted flex items-center justify-center hover:bg-muted/80"
+            >
+              −
+            </button>
+            <span className="text-xl font-semibold text-foreground w-8 text-center">
+              {participants}
+            </span>
+            <button
+              onClick={() => setParticipants(Math.min(experience.maxParticipants || 999, participants + 1))}
+              className="w-10 h-10 rounded-full bg-muted flex items-center justify-center hover:bg-muted/80"
+            >
+              +
+            </button>
+            <span className="text-sm text-muted-foreground ml-auto">
+              Total: ₹{(experience.price * participants).toFixed(0)}
+            </span>
           </div>
         </div>
 
-        {/* Time Slot Picker */}
+        {/* Date Selector */}
         <div className="bg-card rounded-2xl p-5 shadow-card mb-5">
-          <TimeSlotPicker
-            slots={experience.timeSlots}
-            selectedSlot={selectedSlot}
-            onSelectSlot={setSelectedSlot}
-            spotsLeft={experience.spotsLeft}
+          <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
+            <Calendar className="w-5 h-5" />
+            Select Date
+          </h3>
+          <input
+            type="date"
+            value={selectedSlot || ''}
+            onChange={(e) => setSelectedSlot(e.target.value)}
+            className="w-full p-3 bg-muted rounded-lg border border-border focus:border-primary outline-none"
           />
         </div>
+
+        {/* Experience Info */}
+        <div className="bg-card rounded-2xl p-5 shadow-card mb-5">
+          <h3 className="font-semibold text-foreground mb-3">Experience Details</h3>
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <div>
+              <p className="text-muted-foreground text-xs">Duration</p>
+              <p className="font-semibold text-foreground">{formatDuration(experience.duration)}</p>
+            </div>
+            <div>
+              <p className="text-muted-foreground text-xs">Price per Person</p>
+              <p className="font-semibold text-primary">₹{experience.price}</p>
+            </div>
+            <div>
+              <p className="text-muted-foreground text-xs">Rating</p>
+              <p className="font-semibold text-foreground">{experience.rating.toFixed(1)} ⭐</p>
+            </div>
+            <div>
+              <p className="text-muted-foreground text-xs">Category</p>
+              <p className="font-semibold text-foreground">{experience.category || 'N/A'}</p>
+            </div>
+          </div>
+        </div>
+
+        {error && (
+          <div className="bg-destructive/10 border border-destructive rounded-lg p-3 mb-5">
+            <p className="text-sm text-destructive">{error}</p>
+          </div>
+        )}
       </motion.div>
 
       {/* Fixed Book Now Button */}
@@ -203,15 +359,13 @@ const ExperienceDetail = () => {
         >
           <div className="flex items-center justify-between mb-3">
             <div>
-              <p className="text-2xl font-bold text-primary">₹{experience.price}</p>
-              <p className="text-xs text-muted-foreground">per person</p>
-            </div>
-            <div className="flex items-center gap-1 text-sm text-muted-foreground">
-              <Users className="w-4 h-4" />
-              <span>{experience.spotsLeft} spots left</span>
+              <p className="text-2xl font-bold text-primary">
+                ₹{(experience.price * participants).toFixed(0)}
+              </p>
+              <p className="text-xs text-muted-foreground">for {participants} participant(s)</p>
             </div>
           </div>
-          
+
           <Button
             onClick={handleBookNow}
             disabled={!selectedSlot || isBooking}
@@ -220,12 +374,12 @@ const ExperienceDetail = () => {
             {isBooking ? (
               <>
                 <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                Booking...
+                Requesting...
               </>
             ) : selectedSlot ? (
-              `Book for ${selectedSlot}`
+              `Request Booking`
             ) : (
-              'Select a time slot'
+              'Select a date'
             )}
           </Button>
         </motion.div>

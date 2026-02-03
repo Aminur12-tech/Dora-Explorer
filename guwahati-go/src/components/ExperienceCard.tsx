@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Clock, Star, BadgeCheck } from 'lucide-react';
 import { Experience } from '@/data/experiences';
 import { Link } from 'react-router-dom';
+import { fetchDiscoverExperiences } from '@/api/experience.api';
 
 interface ExperienceCardProps {
   experience: Experience;
@@ -31,7 +32,7 @@ export const ExperienceCard = ({ experience, index }: ExperienceCardProps) => {
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 via-transparent to-transparent" />
-            
+
             {/* Duration Badge */}
             <div className="absolute top-3 left-3 bg-card/90 backdrop-blur-sm px-2.5 py-1 rounded-full flex items-center gap-1">
               <Clock className="w-3.5 h-3.5 text-primary" />

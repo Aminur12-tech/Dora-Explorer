@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, ChevronRight } from 'lucide-react';
 import { FilterChips } from '@/components/FilterChips';
-import { ExperienceCard } from '@/components/ExperienceCard';
 import { TopNav } from '../components/TopNav';
 import { LocalHosts } from '../components/LocalHosts';
 import { MapDownloadSection } from '@/components/MapDownload';
 import { Footer } from '../components/Footer';
 import { experiences } from '@/data/experiences';
 import heroImage from '@/assets/Brahma2.jpeg';
+import { Discover } from '@/components/Discover';
 
 const Index = () => {
   const [activeFilter, setActiveFilter] = useState('all');
@@ -55,46 +55,8 @@ const Index = () => {
           </motion.div>
         </div>
       </div>
-
-      {/* Filter Section */}
-      <div className="sticky top-16 z-30 bg-background/95 backdrop-blur-sm border-b border-border px-4 py-3">
-        <FilterChips activeFilter={activeFilter} onFilterChange={setActiveFilter} />
-      </div>
-
-      {/* Experiences Grid */}
-      <div className="px-4 py-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-foreground">
-            {activeFilter === 'all' ? 'All Experiences' : 'Filtered Experiences'}
-          </h2>
-          <button className="flex items-center gap-1 text-sm text-primary font-medium">
-            View Map
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filteredExperiences.map((experience, index) => (
-            <ExperienceCard key={experience.id} experience={experience} index={index} />
-          ))}
-        </div>
-
-        {filteredExperiences.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-center py-12"
-          >
-            <p className="text-muted-foreground">No experiences match your filter.</p>
-            <button
-              onClick={() => setActiveFilter('all')}
-              className="text-primary font-medium mt-2"
-            >
-              Clear filters
-            </button>
-          </motion.div>
-        )}
-      </div>
+      
+      <Discover />
 
       <LocalHosts />
 
