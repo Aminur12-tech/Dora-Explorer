@@ -1,34 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  ArrowLeft, Clock, Star, MapPin, Check,
-  Share2, Heart, BadgeCheck, Users, Loader2, Calendar, DollarSign
+import { 
+  ArrowLeft, Clock, Star, MapPin, Check, 
+  Share2, Heart, BadgeCheck, Users, Loader2 
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { fetchExperienceById } from '@/api/experience.api';
-import { requestBooking } from '@/api/booking.api';
-
-interface Experience {
-  _id: string;
-  title: string;
-  description: string;
-  image?: string;
-  price: number;
-  duration: number;
-  rating: number;
-  area: string;
-  meetingPoint: string;
-  merchantId: string;
-  category?: string;
-  highlights?: string[];
-  included?: string[];
-  notIncluded?: string[];
-  maxParticipants?: number;
-  minParticipants?: number;
-  createdAt?: string;
-  updatedAt?: string;
-}
 
 const ExperienceDetail = () => {
   const { id } = useParams();
@@ -89,27 +66,11 @@ const ExperienceDetail = () => {
 
   const handleBookNow = async () => {
     if (!selectedSlot) return;
-
-    try {
-      setIsBooking(true);
-      const bookingData = {
-        experienceId: experience._id,
-        merchantId: experience.merchantId,
-        name: 'User Name', // Get from auth/user context
-        email: 'user@example.com', // Get from auth/user context
-        phone: '9876543210', // Get from auth/user context
-        amount: experience.price * participants,
-        participants,
-        notes: `Booking for ${selectedSlot}`
-      };
-
-      const response = await requestBooking(bookingData);
-      navigate(`/booking-confirmed/${response.bookingId}?slot=${encodeURIComponent(selectedSlot)}`);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to request booking');
-    } finally {
-      setIsBooking(false);
-    }
+    
+    setIsBooking(true);
+    // Simulate booking API call
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    navigate(`/booking-confirmed/${experience.id}?slot=${encodeURIComponent(selectedSlot)}`);
   };
 
   return (
@@ -275,34 +236,10 @@ const ExperienceDetail = () => {
               </p>
             </div>
           </div>
-        </div>
-
-        {/* Participants Selector */}
-        <div className="bg-card rounded-2xl p-5 shadow-card mb-5">
-          <h3 className="font-semibold text-foreground mb-3">Number of Participants</h3>
-          <p className="text-xs text-muted-foreground mb-3">
-            {experience.minParticipants && `Min: ${experience.minParticipants}`}
-            {experience.maxParticipants && ` | Max: ${experience.maxParticipants}`}
-          </p>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setParticipants(Math.max(experience.minParticipants || 1, participants - 1))}
-              className="w-10 h-10 rounded-full bg-muted flex items-center justify-center hover:bg-muted/80"
-            >
-              −
-            </button>
-            <span className="text-xl font-semibold text-foreground w-8 text-center">
-              {participants}
-            </span>
-            <button
-              onClick={() => setParticipants(Math.min(experience.maxParticipants || 999, participants + 1))}
-              className="w-10 h-10 rounded-full bg-muted flex items-center justify-center hover:bg-muted/80"
-            >
-              +
-            </button>
-            <span className="text-sm text-muted-foreground ml-auto">
-              Total: ₹{(experience.price * participants).toFixed(0)}
-            </span>
+          
+          {/* Map Placeholder */}
+          <div className="mt-4 h-32 bg-muted rounded-xl flex items-center justify-center">
+            <p className="text-muted-foreground text-sm">Map preview</p>
           </div>
         </div>
 
